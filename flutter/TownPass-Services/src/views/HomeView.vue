@@ -11,6 +11,10 @@ import BaseInput from '@/components/atoms/BaseInput.vue';
 import ServiceStep from '@/components/molecules/ServiceStep.vue';
 import serviceListJson from '../../public/mock/service_list.json';
 import caseProgressJson from '../../public/mock/case_progress.json';
+import BaseButton from '@/components/atoms/BaseButton.vue';
+import { get, child } from 'firebase/database';
+import { realtimeRef } from '../../firebaseConfig';
+
 import type { User } from '@/stores/user';
 
 const store = useFormStore();
@@ -113,6 +117,17 @@ const onSearchClick = () => {
     isSearch.value = false;
   }
 };
+const ReadData=()=>{
+  get(realtimeRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            console.log(snapshot.val());
+        } else {
+            console.log('No data available');
+        }
+    }).catch((error) => {
+        console.error(error);
+    });  
+}
 /**
  * tab0 JS end
  */
@@ -222,6 +237,7 @@ const activeRecord = computed(() =>
               </div>
             </li>
           </ul>
+          <BaseButton @click="ReadData">讀取資料</BaseButton>
           <div v-show="isSearch && !searchResult?.length" class="flex flex-col items-center pt-40">
             <p class="text-primary-500 font-bold">查無任何申辦相關項目</p>
           </div>
