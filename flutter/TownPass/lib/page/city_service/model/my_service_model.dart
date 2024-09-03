@@ -28,6 +28,7 @@ enum MyServiceItemId {
   library,
   locationSearch,
   zoo,
+  hackathon,
   ;
 }
 
@@ -165,7 +166,8 @@ extension MyServiceIdExt on MyServiceItemId {
           description: '提供各區日常服務地圖查找',
           icon: Assets.svg.iconLocationSearch24.svg(),
           category: MyServiceCategory.explore,
-          destinationUrl: 'https://taipei-pass-service.vercel.app/surrounding-service/',
+          destinationUrl:
+              'https://taipei-pass-service.vercel.app/surrounding-service/',
         ),
       MyServiceItemId.zoo => MyServiceItem(
           title: '愛遊動物園',
@@ -173,6 +175,13 @@ extension MyServiceIdExt on MyServiceItemId {
           icon: Assets.svg.iconZoo24.svg(),
           category: MyServiceCategory.explore,
           destinationUrl: '',
+        ),
+      MyServiceItemId.hackathon => MyServiceItem(
+          title: '嘿嘿嘿',
+          description: '2024秋季程式設計',
+          icon: Assets.svg.iconDistrictOffice.svg(),
+          category: MyServiceCategory.other,
+          destinationUrl: 'https://hackathon2024-1b87f.web.app/',
         ),
     };
   }
