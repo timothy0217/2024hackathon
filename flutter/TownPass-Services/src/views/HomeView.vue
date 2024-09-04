@@ -19,6 +19,8 @@ import { db } from '../../firebaseConfig';
 
 
 import type { User } from '@/stores/user';
+import axios from 'axios';
+
 
 const store = useFormStore();
 
@@ -134,16 +136,41 @@ const ReadRealtime=()=>{
 
 const ReadFireStore=async ()=>{
   const querySnapshot = await getDocs(collection(db, "users"));
-
 querySnapshot.forEach((doc) => {
   console.log(`${doc.id} => ${JSON.stringify(doc.data(), null, 2)}`);
 });
 // querySnapshot.forEach((doc) => {
 //   console.log(`${doc.id} => ${doc.data()}`);
 // });
-
-
 }
+
+//local開發
+const GetAPI = () => {
+  axios.get('/api/v1/dataset/1c404c84-0e89-4e2f-bd26-3b8c427d550c?scope=resourceAquire&offset=0')
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+// //發布
+// const GetAPI = () => {
+//   axios.get('https://cors-anywhere.herokuapp.com/https://data.taipei/api/v1/dataset/1c404c84-0e89-4e2f-bd26-3b8c427d550c?scope=resourceAquire&offset=0')
+//     .then(response => {
+//       console.log(response.data);
+//     })
+//     .catch(error => {
+//       console.error(error);
+//     });
+// }
+
+
+
+
+
+
 /**
  * tab0 JS end
  */
@@ -255,6 +282,7 @@ const activeRecord = computed(() =>
           </ul>
           <BaseButton @click="ReadRealtime">讀取Realtime</BaseButton>
           <BaseButton @click="ReadFireStore">讀取FireStore</BaseButton>
+          <BaseButton @click="GetAPI">讀取OpenAPI</BaseButton>
           <div v-show="isSearch && !searchResult?.length" class="flex flex-col items-center pt-40">
             <p class="text-primary-500 font-bold">查無任何申辦相關項目</p>
           </div>
