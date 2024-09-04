@@ -14,6 +14,9 @@ import caseProgressJson from '../../public/mock/case_progress.json';
 import BaseButton from '@/components/atoms/BaseButton.vue';
 import { get, child } from 'firebase/database';
 import { realtimeRef } from '../../firebaseConfig';
+import { collection, getDocs } from "firebase/firestore"; 
+import { db } from '../../firebaseConfig';
+
 
 import type { User } from '@/stores/user';
 
@@ -117,7 +120,7 @@ const onSearchClick = () => {
     isSearch.value = false;
   }
 };
-const ReadData=()=>{
+const ReadRealtime=()=>{
   get(realtimeRef).then((snapshot) => {
         if (snapshot.exists()) {
             console.log(snapshot.val());
@@ -127,6 +130,19 @@ const ReadData=()=>{
     }).catch((error) => {
         console.error(error);
     });  
+}
+
+const ReadFireStore=async ()=>{
+  const querySnapshot = await getDocs(collection(db, "users"));
+
+querySnapshot.forEach((doc) => {
+  console.log(`${doc.id} => ${JSON.stringify(doc.data(), null, 2)}`);
+});
+// querySnapshot.forEach((doc) => {
+//   console.log(`${doc.id} => ${doc.data()}`);
+// });
+
+
 }
 /**
  * tab0 JS end
@@ -237,7 +253,8 @@ const activeRecord = computed(() =>
               </div>
             </li>
           </ul>
-          <BaseButton @click="ReadData">讀取資料</BaseButton>
+          <BaseButton @click="ReadRealtime">讀取Realtime</BaseButton>
+          <BaseButton @click="ReadFireStore">讀取FireStore</BaseButton>
           <div v-show="isSearch && !searchResult?.length" class="flex flex-col items-center pt-40">
             <p class="text-primary-500 font-bold">查無任何申辦相關項目</p>
           </div>
