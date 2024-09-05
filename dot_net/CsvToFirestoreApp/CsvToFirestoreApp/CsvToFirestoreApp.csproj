@@ -19,6 +19,9 @@
     <None Update="firestore.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="hackathon2024-1b87f-firebase-adminsdk-nxddf-3efc91096b.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

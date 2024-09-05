@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\2024hackathon\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj": {}
+    "D:\\2024hackathon\\dot_net\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj": {}
   },
   "projects": {
-    "D:\\2024hackathon\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj": {
+    "D:\\2024hackathon\\dot_net\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\2024hackathon\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj",
+        "projectUniqueName": "D:\\2024hackathon\\dot_net\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj",
         "projectName": "CsvToFirestoreApp",
-        "projectPath": "D:\\2024hackathon\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj",
+        "projectPath": "D:\\2024hackathon\\dot_net\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj",
         "packagesPath": "C:\\Users\\Churton\\.nuget\\packages\\",
-        "outputPath": "D:\\2024hackathon\\CsvToFirestoreApp\\CsvToFirestoreApp\\obj\\",
+        "outputPath": "D:\\2024hackathon\\dot_net\\CsvToFirestoreApp\\CsvToFirestoreApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

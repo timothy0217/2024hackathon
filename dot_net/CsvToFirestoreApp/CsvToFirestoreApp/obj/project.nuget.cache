@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HhDF1UoReJXXJT7p1xDxFvf7B7aY01LdIjYQXOH0ws4aVwz9hzaBZP7z41pteX5QzwDR1U6pKE/XAEhP2oJXeg==",
+  "dgSpecHash": "ERjqGDh2dzv5Y/A/yBflSHOFM+dTYlFF87wRxfg9lIPbQhN8lYHHUGJKMmU+NXVpvksVmTChTy8rxl20ZnvKbQ==",
   "success": true,
-  "projectFilePath": "D:\\2024hackathon\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj",
+  "projectFilePath": "D:\\2024hackathon\\dot_net\\CsvToFirestoreApp\\CsvToFirestoreApp\\CsvToFirestoreApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Churton\\.nuget\\packages\\csvhelper\\33.0.1\\csvhelper.33.0.1.nupkg.sha512",
     "C:\\Users\\Churton\\.nuget\\packages\\firebaseadmin\\3.0.0\\firebaseadmin.3.0.0.nupkg.sha512",

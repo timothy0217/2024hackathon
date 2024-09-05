@@ -23,6 +23,7 @@ namespace CsvToFirestoreApp
         // Form Load Event - Populate dropdown with Firestore collection names
         private async void MainForm_Load(object sender, EventArgs e)
         {
+            //要去系統變數設置GOOGLE_APPLICATION_CREDENTIALS，指向firestore.json的位置
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
             string credentialPath = Path.Combine(appPath, "firestore.json");
             FirebaseApp.Create(new AppOptions()
@@ -30,7 +31,7 @@ namespace CsvToFirestoreApp
                 Credential = GoogleCredential.FromFile(credentialPath),
             });
 
-            db = FirestoreDb.Create("1:87705706406:web:8e227985bb1196c2b63967");
+            db = FirestoreDb.Create("hackathon2024-1b87f");
 
             // Fetch collections and add them to the ComboBox
             comboBoxCollections.Items.Clear();

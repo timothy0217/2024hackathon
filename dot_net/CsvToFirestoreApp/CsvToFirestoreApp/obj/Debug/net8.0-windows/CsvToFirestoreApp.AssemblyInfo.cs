@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CsvToFirestoreApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+130aa2a1ae7e6a3e51109b82290d98b8bdb845ea")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ccaae8d4c846af23a0f2b0b3841263fc1424f77b")]
 [assembly: System.Reflection.AssemblyProductAttribute("CsvToFirestoreApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CsvToFirestoreApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
