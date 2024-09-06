@@ -9,6 +9,7 @@ import CouponListView from '../views/CouponListView.vue';
 import HotSpotView from '../views/HotSpotView.vue';
 import TicketDetail from '../views/TicketDetail.vue';
 import CouponDetail from '../views/CouponDetail.vue';
+import Search from '@/views/Search.vue' // 導入 Search.vue
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +18,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: Search // 將 Search.vue 指定為此路徑的 component
     },
     {
       path: '/form/:id',
