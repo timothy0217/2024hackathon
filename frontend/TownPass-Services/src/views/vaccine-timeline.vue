@@ -1,3 +1,59 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useCouponStore } from '@/stores/coupon';
+import { useConnectionMessage } from '@/composables/useConnectionMessage';
+import { useHandleConnectionData } from '@/composables/useHandleConnectionData';
+import BaseDialog from '@/components/atoms/BaseDialog.vue';
+import CouponResultItem from '@/components/molecules/CouponResultItem.vue';
+import { vaccines } from '@/zipcode/vaccine';
+import type { IBaby, ICareType, IVaccineTracking, ISubsidy, IBirthOrderSubsidy, IDaycareSubsidy, ISubsidyDetail } from '@/ts/baby';  
+// 將需要的 class 從 babyClasses.ts 中引入
+
+
+const store = useCouponStore();
+const route = useRoute();
+const router = useRouter();
+
+
+</script>
+
+<template>
+  <div class="vaccine-timeline">
+  <div class="vaccine-entry">
+    <div class="date" v-model=""></div>
+    <div class="vaccine-info">
+      <h3>B 型肝炎疫苗 (HepB)</h3>
+      <p>施打疫苗日期: 2024/09/06</p>
+      <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
+      <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
+    </div>
+  </div>
+
+  <div class="vaccine-entry">
+    <div class="date">2024/09/24</div>
+    <div class="vaccine-info">
+      <h3>卡介苗 (BCG)</h3>
+      <p>施打疫苗日期: 2024/09/24</p>
+      <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
+      <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
+    </div>
+  </div>
+
+  <div class="vaccine-entry">
+    <div class="date">2024/10/10</div>
+    <div class="vaccine-info">
+      <h3>B 型肝炎疫苗 (HepB)</h3>
+      <p>施打疫苗日期: 2024/10/10</p>
+      <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
+      <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
+    </div>
+  </div>
+</div>
+</template>
+
+<style scoped>
 
 body {
   font-family: Arial, sans-serif;
@@ -159,3 +215,5 @@ details[open] summary {
   color: #333;
 }
 
+
+</style>
