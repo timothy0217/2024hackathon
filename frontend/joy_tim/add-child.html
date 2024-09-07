@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>補助查詢表單</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Header -->
+<div class="header index">
+  <img src="/image/arrow.png">
+  <span>新增孩童</span>
+  <div class="space"></div>
+</div>
+
+<!-- main -->
+<div class="form-container">
+  <form id="queryForm">
+    <!-- 出生日期 -->
+    <label for="birthday">出生日期</label>
+    <input type="date" id="birthday" name="birthday" required>
+
+    <label for="birthday">姓名</label>
+    <input type="text" required>
+  </form>
+  <div class="button-group">
+    <button type="submit" class="btn-query">新增</button>
+    <button type="reset" class="btn-clear">取消</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <button id="tab-1" class="active" onclick="showPage(1)">補助查詢</button>
+  <button id="tab-2" onclick="showPage(2)">疫苗軌跡</button>
+</div>
+
+<!-- Link to external JavaScript -->
+<script src="scripts.js"></script>
+</body>
+</html>
