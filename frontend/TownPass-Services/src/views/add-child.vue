@@ -31,10 +31,10 @@ const addChild = async () => {
     const docRef = doc(childeCollection);
     await setDoc(docRef, Baby123.value);
     
-    alert('資料已新增至 Firestore');
+    alert('資料新增成功');
     // 清空表單
     Baby123.value.Birthday  = '';
-    
+    goHome();
   } catch (error) {
     console.error('新增資料錯誤:', error);
     alert('新增資料失敗');
