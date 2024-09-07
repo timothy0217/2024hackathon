@@ -25,6 +25,7 @@ const database = getDatabase(app)// 建立資料庫ref
 //使用FireStore
 export const db=getFirestore(app)
 export const realtimeRef = ref(database, 'chatroom')
+export const writedb=getFirestore(app)
 // 使用不同路徑(table)
 // export const usersRef = ref(database, 'users')
 // 使用不同路徑(table)
