@@ -1,18 +1,32 @@
 function showPage(pageNumber) {
-    // 隱藏所有分頁
-    document.getElementById('page-1').classList.add('hidden');
-    document.getElementById('page-2').classList.add('hidden');
+    const pageContent = document.getElementById('page-content');
 
-    // 顯示對應分頁
-    document.getElementById('page-' + pageNumber).classList.remove('hidden');
+    // Clear the content first
+    pageContent.innerHTML = '';
 
-    // 更新底部導航的活動狀態
+    if (pageNumber === 1) {
+        loadPage('subsidy-form.html', pageContent);
+    } else if (pageNumber === 2) {
+        loadPage('vaccine-timeline.html', pageContent);
+    }
+
+    // Update active tab
     document.getElementById('tab-1').classList.remove('active');
     document.getElementById('tab-2').classList.remove('active');
     document.getElementById('tab-' + pageNumber).classList.add('active');
 }
 
-document.getElementById("queryForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    document.getElementById("queryResults").classList.remove("hidden");
+// Reusable function to load content from a file using Fetch API
+function loadPage(page, container) {
+    fetch(page)
+        .then(response => response.text())
+        .then(data => {
+            container.innerHTML = data;
+        })
+        .catch(error => console.error('Error loading page:', error));
+}
+
+// Load the first tab by default
+document.addEventListener('DOMContentLoaded', () => {
+    showPage(1);
 });

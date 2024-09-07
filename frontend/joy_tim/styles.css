@@ -13,10 +13,6 @@ body {
     font-weight: bold;
     color: #333;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed; /* 使 header 固定在頁面頂部 */
-    top: 0;
-    width: 100%;
-    z-index: 1000; /* 確保 header 位於最上層 */
 }
 
 .footer {
@@ -45,14 +41,13 @@ body {
     border-bottom: 2px solid #007B80;
 }
 
-/* 調整 form-container 的 margin，避免與固定 header 重疊 */
 .form-container {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 400px;
-    margin: 120px auto 80px; /* 調整 margin-top，讓內容不與固定的 header 重疊 */
+    margin: 80px auto 80px;
 }
 
 .hidden {
