@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { useFormStore } from '@/stores/form';
 import { useUserStore } from '@/stores/user';
@@ -13,15 +13,16 @@ import serviceListJson from '../../public/mock/service_list.json';
 import caseProgressJson from '../../public/mock/case_progress.json';
 import BaseButton from '@/components/atoms/BaseButton.vue';
 import { get, child } from 'firebase/database';
-import { realtimeRef } from '../../firebaseConfig';
 import { collection, getDocs } from "firebase/firestore"; 
 import { db } from '../../firebaseConfig';
-
-
 import type { User } from '@/stores/user';
 import axios from 'axios';
+import SubsidyForm from './SubsidyForm.vue';
 
-
+const showModal = ref(false);
+const year = ref('');
+const month = ref('');
+const activeTab = ref(1);
 const store = useFormStore();
 
 store.reset();
@@ -36,240 +37,610 @@ const handleUserInfo = (event: { data: string }) => {
   user.value = result.data;
 };
 
-/**
- * 同頁面要處理多個雙向連結資料參考
- */
-// const handleConnectionData = (event: { data: string }) => {
-//   const result: { name: string; data: any } = JSON.parse(event.data);
-//   const name = result.name;
+// 打開彈窗
+const openModal=()=> {
+  showModal.value = true;
+}
 
-//   switch (name) {
-//     case 'userinfo':
-//       handleUserInfo(event);
-//       break;
-//     case 'phone_call':
-//       //....
-//       break;
-//     default:
-//       break;
-//   }
-// };
+// 關閉彈窗
+const closeModal=()=> {
+  showModal.value = false;
+}
 
-useConnectionMessage('userinfo', null);
+// 設置疫苗搜尋功能
+const searchVaccine = (entrySelector: string) => {
+  if (!year.value || !month.value) {
+    alert('请选择年份和月份');
+    return;
+  }
 
-useHandleConnectionData(handleUserInfo);
+  const entries = document.querySelectorAll<HTMLDivElement>(`.${entrySelector} .date`);
+  let found = false;
 
-/**
- * tab1 JS end
- */
+  entries.forEach(entry => {
+    const entryDate = entry.textContent?.trim() ?? '';
+    const [entryYear, entryMonth] = entryDate.split('/');
+
+    if (entryYear === year.value && entryMonth === month.value) {
+      entry.scrollIntoView({ behavior: 'smooth' });
+      found = true;
+    }
+  });
+
+  if (!found) {
+    alert('未找到匹配的疫苗记录');
+  }
+}
+
+// 切換選項卡
+const showPage = (pageNumber: number) => {
+  activeTab.value = pageNumber;
+  localStorage.setItem('activeTab', pageNumber.toString());
+}
+
+
+// 初始化頁面
+onMounted(() => {
+  const savedTab = localStorage.getItem('activeTab');
+  if (savedTab) {
+    showPage(parseInt(savedTab));
+  } else {
+    showPage(1);
+  }
+});
+
 </script>
 
 <template>
   <main>
-    <div class="form-container">
-      <form>
-        <!-- 出生日期 -->
-        <label for="birthday">出生日期</label>
-        <input type="date" id="birthday" name="birthday" required>
+    <!-- Header -->
+    <div class="header index">
+        <img src="/image/hamber.png" class="nav" id="open-modal" @click="openModal">
+      <span>王大明</span>
+      <div class="space"></div>
+    </div>
 
-        <!-- 第幾胎 -->
-        <label for="birth-order">第幾胎</label>
-        <select id="birth-order" name="birth-order" required>
-          <option value="一胎">一胎</option>
-          <option value="二胎">二胎</option>
-          <option value="三胎">三胎</option>
-          <option value="四胎以上">四胎以上</option>
-        </select>
+    <!-- Form Container -->
+    <div class="form-container no-style">
+      <video autoplay muted>
+        <source src="/image/2.mp4" type="video/mp4">
+      </video>
+    </div>
 
-        <!-- 幼稚園類型 -->
-        <label for="kindergarten-type">幼稚園類型</label>
-        <select id="kindergarten-type" name="kindergarten-type" required>
-          <option value="">請選擇</option>
-          <option value="公立">公立</option>
-          <option value="私立">私立</option>
-        </select>
+    <!-- Alert -->
+    <div class="alert">
+      <span>2024/09/03 將要施打Ｂ型肝炎疫苗(HepB)疫苗</span>
+    </div>
 
-        <!-- 中低收入戶 -->
-        <div class="radio-group">
-          <label>中低收入戶</label>
-          <div class="radio-options">
-            <input type="radio" id="low-income-yes" name="low-income" value="yes" required>
-            <label for="low-income-yes">是</label>
-            <input type="radio" id="low-income-no" name="low-income" value="no" required>
-            <label for="low-income-no">否</label>
-          </div>
-        </div>
+    <!-- Modal -->
+    <div class="nav-modal" v-if="showModal">
+  <div class="modal-content">
+    <div class="details-modal-title">
+      <img src="/image/people.png">
+      <span>王大明</span>
+    </div>
+    <RouterLink to="/addchild" class="details-modal-content">
+  <img src="/image/add.png" alt="Add Child">
+  <span>新增孩童</span>
+</RouterLink>
+    <button id="close-modal" @click="closeModal">Close</button>
+    <button id="tab-1">
+  <RouterLink to="/subsidyform" style="color: #007B80">補助查詢</RouterLink>
+</button>
+  </div>
+</div>
 
-        <!-- 原住民 -->
-        <div class="radio-group">
-          <label>原住民</label>
-          <div class="radio-options">
-            <input type="radio" id="aboriginal-yes" name="aboriginal" value="yes" required>
-            <label for="aboriginal-yes">是</label>
-            <input type="radio" id="aboriginal-no" name="aboriginal" value="no" required>
-            <label for="aboriginal-no">否</label>
-          </div>
-        </div>
 
-        <!-- 查詢和清除按鈕 -->
-        <div class="button-group">
-          <button type="submit" class="btn-query">查詢</button>
-          <button type="reset" class="btn-clear">清除</button>
-        </div>
-      </form>
-
-      <!-- 補助資訊 / TODO:查詢後顯示 -->
-      <details>
-        <summary>社會局 可補助<span class="amount">$5000</span></summary>
-        <div class="subsidy-info">
-          <p class="stars">以家長雙方自然人憑證或健保卡就可以申請。</p>
-          <p class="stars">112年1月起已經「取消」稅率限制（不排富）。</p>
-          <p class="stars">目前尚未申請者，於112年12月31日前申請可追溯至今（112）年度符合資格月份。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>政府機關 可補助<span class="amount">$5000</span></summary>
-        <div class="subsidy-info">
-          <p>我國籍兒童且申請領時符合下列情形者：</p>
-          <p>(一) 未滿2歲。</p>
-          <p>(二) 完成出生登記或初設戶籍登記。</p>
-          <p>(三) 未經政府公費安置收容。</p>
-          <p>(四) 未接受公共化或準公共托育服務。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>教育部 可補助<span class="amount">$3000</span></summary>
-        <div class="subsidy-info">
-          <p>如申請人其一方、雙方或子女有收養等特殊情況，請檢附警察署（處）理查詢人口案件登記表之收執聯副本、保安處分處執行證明、家暴事件調查表副本、家暴暴力事件驗傷診斷書影本或暫時、通常保護令影本與法院判決等其他證明文件，將相關資料郵寄或親送至幼兒戶籍所在地之鄉（鎮、市、區）公所提出申請。</p>
-        </div>
-      </details>
+    <!-- Footer -->
+    <div class="footer">
+      <button id="tab-1">
+  <RouterLink to="/subsidyform" style="color: #007B80">補助查詢</RouterLink>
+</button>
+      <button id="tab-2">
+  <RouterLink to="/vaccine-timeline" style="color: #007B80">疫苗軌跡</RouterLink>
+</button>
     </div>
   </main>
 </template>
 
 
 
+
 <style scoped>
 body {
-  font-family: Arial, sans-serif;
-  background-color: #EAF8FB;
-  padding: 20px;
-  margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #EAF8FB;
+    padding: 0;
+    margin: 0;
+}
+
+.header {
+    background-color: #ffffff;
+    text-align: center;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header.index{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer button {
+    background-color: #EAF8FB;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #007B80;
+    font-weight: bold;
+}
+
+.footer button.active {
+    color: #007B80;
+    border-bottom: 2px solid #007B80;
 }
 
 .form-container {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 80px auto 80px;
+}
+
+.form-container.no-style{
+    background-color: transparent;
+    box-shadow: none;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    display: contents;
+}
+
+.form-container.no-style video{
+    width: 100%;
+}
+
+.hidden {
+    display: none;
 }
 
 .form-container label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #333;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
 }
 
 .form-container input[type="date"],
 .form-container select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 .form-container input[type="date"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .radio-group {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .radio-group label {
-  font-size: 14px;
-  margin-right: 15px;
-  color: #333;
+    font-size: 14px;
+    margin-right: 15px;
+    color: #333;
 }
 
 .radio-options {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .radio-options input[type="radio"] {
-  margin-right: 5px;
-  accent-color: #4DAECB;
+    margin-right: 5px;
+    accent-color: #4DAECB;
 }
 
 .form-container button {
-  width: 48%;
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+    width: 48%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 按鈕的通用樣式 */
+.btn-query {
+    background-color: #4DAECB;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-query:hover {
+    background-color: #007B80;
 }
 
 .form-container .btn-query {
-  background-color: #4DAECB;
-  color: white;
+    background-color: #4DAECB;
+    color: white;
 }
 
 .form-container .btn-clear {
-  background-color: #E0F5FA;
-  color: #4DAECB;
-  border: 1px solid #4DAECB;
+    background-color: #E0F5FA;
+    color: #4DAECB;
+    border: 1px solid #4DAECB;
 }
 
 .form-container .button-group {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
-/* 下拉補助資訊區域 */
+.form-container
+
 details {
-  background-color: #F5F5F5;
-  border-radius: 10px;
-  margin-top: 10px;
-  padding: 10px;
-  color: #333;
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    color: #333;
 }
 
 summary {
-  font-size: 18px;
-  color: #007B80;
-  cursor: pointer;
-  margin-bottom: 10px;
-  font-weight: bold;
+    font-size: 18px;
+    color: #007B80;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 details[open] summary {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .subsidy-info p {
-  font-size: 14px;
-  margin: 5px 0;
+    font-size: 14px;
+    margin: 5px 0;
 }
 
 .subsidy-info .amount {
-  color: #E63946;
-  font-weight: bold;
+    color: #E63946;
+    font-weight: bold;
 }
 
 .subsidy-info .stars {
-  color: #333;
+    color: #333;
+}
+
+
+/* Vaccine-timeline*/
+/* 篩選區域樣式，確保按鈕與選擇框對齊 */
+.filter-section {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 確保按鈕和下拉選單在同一水平線 */
+    gap: 10px;
+}
+
+.filter-section select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 40px; /* 確保下拉選單與按鈕高度一致 */
+}
+
+/* 查詢按鈕風格 */
+.btn-search {
+    background-color: #4DAECB;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-search img {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-search:hover {
+    background-color: #007B80;
+}
+
+/* 日期和內容的佈局 */
+.vaccine-entry {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+/* 日期樣式，左側對齊 */
+.vaccine-entry .date {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    background-color: #EAF8FB;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100px;
+    text-align: center;
+    margin-right: 20px;
+}
+
+/* 內容樣式，右側對齊 */
+.vaccine-info {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+.vaccine-info h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007B80;
+    margin-bottom: 10px;
+}
+
+/* 日期輸入框與儲存按鈕樣式 */
+.input-section {
+    margin-bottom: 15px; /* 增加與內容的間距 */
+    display: flex;
+    align-items: center;
+}
+
+.vaccine-date-input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    width: 150px;
+}
+
+.btn-save {
+    background-color: #4DAECB;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-save:hover { /* 日期和內容的佈局 */
+
+    .vaccine-entry {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    /* 日期樣式，左側對齊 */
+
+    .vaccine-entry .date {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        background-color: #EAF8FB;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100px;
+        text-align: center;
+        margin-right: 20px;
+    }
+
+    /* 內容樣式，右側對齊 */
+
+    .vaccine-info {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        text-align: left; /* 保持內容文字左對齊 */
+    }
+
+    .vaccine-info h3 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #007B80;
+        margin-bottom: 10px;
+    }
+
+    /* 日期和內容的佈局 */
+
+    .vaccine-entry {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    /* 日期樣式，左側對齊 */
+
+    .vaccine-entry .date {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        background-color: #EAF8FB;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100px;
+        text-align: center;
+        margin-right: 20px;
+    }
+
+    /* 內容樣式，右側對齊 */
+
+    .vaccine-info {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        text-align: left; /* 保持內容文字左對齊 */
+    }
+
+    .vaccine-info h3 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #007B80;
+        margin-bottom: 10px;
+    }
+    /* 調整篩選區域的 select 和 button 對齊 */
+    .filter-section {
+        display: flex;
+        align-items: center; /* 確保 select 和 button 在垂直方向對齊 */
+        gap: 10px; /* 控制 select 和 button 之間的間距 */
+    }
+
+    .filter-section select {
+        padding: 0 10px; /* 移除上下 padding 並保持左右內邊距 */
+        font-size: 16px; /* 保持字體大小一致 */
+        height: 42px; /* 設定固定高度 */
+        line-height: 42px; /* 讓文字在高度內垂直居中 */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn-search {
+        background-color: #4DAECB;
+        color: white;
+        padding: 0 15px; /* 調整 padding 與 select 高度一致，移除上下 padding */
+        font-size: 16px; /* 保持字體大小一致 */
+        height: 42px; /* 設定固定高度 */
+        line-height: 42px; /* 讓按鈕文字或圖標垂直居中 */
+        border: none;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* 確保圖標在按鈕內垂直居中 */
+        cursor: pointer;
+    }
+
+    .btn-search img {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Media query for mobile devices */
+    @media (max-width: 768px) {
+        .filter-section {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-section select,
+        .filter-section .btn-search {
+            width: 100%; /* 在手機端全寬 */
+            margin-bottom: 10px;
+        }
+
+        .filter-section .btn-search {
+            width: auto; /* 設定為自適應寬度 */
+        }
+    }
+
+
+}
+
+a {
+    text-decoration: none; /* no underline */
+}
+/* 彈窗背景 */
+.nav-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed; /* 确保弹窗浮动在页面上方 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+}
+  
+  /* 彈窗內容 */
+  .modal-content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+  /* 彈窗標題 */
+  .details-modal-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* 彈窗內容 */
+  .details-modal-content {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .alert{
+    position: absolute; /* 絕對定位 */
+    top: 20%;
+    left: 50%; /* 水平居中，根據 .form-container 的寬度 */
+    transform: translate(-50%, -50%); /* 調整元素位置，使其真正居中 */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px; /* 根據需要調整最大寬度 */
+    z-index: 10; /* 確保在其他內容上面 */
+    text-align: center; /* 使 alert 內容居中 */
+}
+
+.modal-content button{
+    display: none;
+}
+
+.alert span{
+    color: #d45251;
 }
 </style>

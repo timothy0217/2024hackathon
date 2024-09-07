@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/vaccine-timeline.vue';
+// import HomeView from '../views/vaccine-timeline.vue';
 import FormView from '../views/FormView.vue';
 import SurroundingServiceView from '../views/SurroundingServiceView.vue';
 import TopQnAListView from '../views/TopQnAListView.vue';
 import QnAListView from '../views/QnAListView.vue';
 import CouponView from '../views/CouponView.vue';
 import CouponListView from '../views/CouponListView.vue';
-import HotSpotView from '../views/vaccine-timeline.vue';
+// import HotSpotView from '../views/vaccine-timeline.vue';
 import TicketDetail from '../views/TicketDetail.vue';
 import CouponDetail from '../views/CouponDetail.vue';
-
+import HomeView from '@/views/HomeView.vue';
+import SubsidyForm from '@/views/SubsidyForm.vue';
+import addChild from '@/views/add-child.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,55 +21,15 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/form/:id',
-      name: 'form',
-      component: FormView
+      path: '/subsidyForm',
+      name: 'subsidyForm',
+      component: SubsidyForm
     },
     {
-      path: '/surrounding-service',
-      name: 'surrounding-service',
-      component: SurroundingServiceView
+      path: '/addChild',
+      name: 'addChild',
+      component: addChild
     },
-    {
-      path: '/qna',
-      name: 'top-qna-list',
-      component: TopQnAListView
-    },
-    {
-      path: '/qna/categories',
-      name: 'qna-list',
-      component: QnAListView
-    },
-    {
-      path: '/coupon',
-      children: [
-        {
-          path: '',
-          name: 'coupon',
-          component: CouponView
-        },
-        {
-          path: 'list',
-          name: 'coupon-list',
-          component: CouponListView
-        },
-        {
-          path: 'hotspot/:id',
-          name: 'hotspot',
-          component: HotSpotView
-        },
-        {
-          path: 'ticket-detail/:id',
-          name: 'ticket-detail',
-          component: TicketDetail
-        },
-        {
-          path: 'coupon-detail/:id',
-          name: 'coupon-detail',
-          component: CouponDetail
-        }
-      ]
-    }
   ]
 });
 
