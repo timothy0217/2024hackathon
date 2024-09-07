@@ -8,6 +8,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
 using System.Globalization;
 using System.Formats.Asn1;
+using Newtonsoft.Json;
 
 namespace CsvToFirestoreApp
 {
@@ -44,7 +45,6 @@ namespace CsvToFirestoreApp
 
         }
 
-        // Button click event - Upload CSV and import to selected Firestore collection
         private async void btnUpload_Click(object sender, EventArgs e)
         {
             if (comboBoxCollections.SelectedItem == null)
@@ -53,32 +53,68 @@ namespace CsvToFirestoreApp
                 return;
             }
 
-            // Open file dialog to select CSV file
-            openFileDialog.Filter = "CSV files (*.csv)|*.csv";
+            // Open file dialog to select CSV or JSON file
+            openFileDialog.Filter = "CSV files (*.csv)|*.csv|JSON files (*.json)|*.json";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string selectedFilePath = openFileDialog.FileName;
+                string fileExtension = Path.GetExtension(selectedFilePath).ToLower();
 
-                // Parse the CSV file
-                using (var reader = new StreamReader(selectedFilePath))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                // Get selected Firestore collection
+                var collectionName = comboBoxCollections.SelectedItem.ToString();
+                CollectionReference collection = db.Collection(collectionName);
+
+                try
                 {
-                    var records = csv.GetRecords<dynamic>().ToList();
-
-                    // Get selected Firestore collection
-                    var collectionName = comboBoxCollections.SelectedItem.ToString();
-                    CollectionReference collection = db.Collection(collectionName);
-
-                    // Add each record to the Firestore collection
-                    foreach (var record in records)
+                    if (fileExtension == ".csv")
                     {
-                        await collection.AddAsync(record);
+                        // Handle CSV file parsing and uploading
+                        await UploadCsvToFirestore(selectedFilePath, collection);
+                    }
+                    else if (fileExtension == ".json")
+                    {
+                        // Handle JSON file parsing and uploading
+                        await UploadJsonToFirestore(selectedFilePath, collection);
                     }
 
-                    MessageBox.Show("CSV data successfully imported into Firestore.");
+                    MessageBox.Show("Data successfully imported into Firestore.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error importing data: {ex.Message}");
                 }
             }
         }
+
+        private async Task UploadCsvToFirestore(string filePath, CollectionReference collection)
+        {
+            // Parse the CSV file
+            using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<dynamic>().ToList();
+
+                // Add each record to the Firestore collection
+                foreach (var record in records)
+                {
+                    await collection.AddAsync(record);
+                }
+            }
+        }
+
+        private async Task UploadJsonToFirestore(string filePath, CollectionReference collection)
+        {
+            // Parse the JSON file
+            string jsonContent = File.ReadAllText(filePath);
+            var data = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonContent);
+
+            // Add each record to the Firestore collection
+            foreach (var record in data)
+            {
+                await collection.AddAsync(record);
+            }
+        }
+
     }
 }
 
