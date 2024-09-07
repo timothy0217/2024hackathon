@@ -108,6 +108,22 @@ body {
     cursor: pointer;
 }
 
+/* 按鈕的通用樣式 */
+.btn-query {
+    background-color: #4DAECB;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-query:hover {
+    background-color: #007B80;
+}
+
 .form-container .btn-query {
     background-color: #4DAECB;
     color: white;
@@ -156,4 +172,248 @@ details[open] summary {
 
 .subsidy-info .stars {
     color: #333;
+}
+
+
+/* Vaccine-timeline*/
+/* 篩選區域樣式，確保按鈕與選擇框對齊 */
+.filter-section {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 確保按鈕和下拉選單在同一水平線 */
+    gap: 10px;
+}
+
+.filter-section select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 40px; /* 確保下拉選單與按鈕高度一致 */
+}
+
+/* 查詢按鈕風格 */
+.btn-search {
+    background-color: #4DAECB;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-search img {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-search:hover {
+    background-color: #007B80;
+}
+
+/* 日期和內容的佈局 */
+.vaccine-entry {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+/* 日期樣式，左側對齊 */
+.vaccine-entry .date {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    background-color: #EAF8FB;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100px;
+    text-align: center;
+    margin-right: 20px;
+}
+
+/* 內容樣式，右側對齊 */
+.vaccine-info {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+.vaccine-info h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007B80;
+    margin-bottom: 10px;
+}
+
+/* 日期輸入框與儲存按鈕樣式 */
+.input-section {
+    margin-bottom: 15px; /* 增加與內容的間距 */
+    display: flex;
+    align-items: center;
+}
+
+.vaccine-date-input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    width: 150px;
+}
+
+.btn-save {
+    background-color: #4DAECB;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-save:hover { /* 日期和內容的佈局 */
+
+    .vaccine-entry {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    /* 日期樣式，左側對齊 */
+
+    .vaccine-entry .date {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        background-color: #EAF8FB;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100px;
+        text-align: center;
+        margin-right: 20px;
+    }
+
+    /* 內容樣式，右側對齊 */
+
+    .vaccine-info {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        text-align: left; /* 保持內容文字左對齊 */
+    }
+
+    .vaccine-info h3 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #007B80;
+        margin-bottom: 10px;
+    }
+
+    /* 日期和內容的佈局 */
+
+    .vaccine-entry {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    /* 日期樣式，左側對齊 */
+
+    .vaccine-entry .date {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        background-color: #EAF8FB;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100px;
+        text-align: center;
+        margin-right: 20px;
+    }
+
+    /* 內容樣式，右側對齊 */
+
+    .vaccine-info {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        text-align: left; /* 保持內容文字左對齊 */
+    }
+
+    .vaccine-info h3 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #007B80;
+        margin-bottom: 10px;
+    }
+    /* 調整篩選區域的 select 和 button 對齊 */
+    .filter-section {
+        display: flex;
+        align-items: center; /* 確保 select 和 button 在垂直方向對齊 */
+        gap: 10px; /* 控制 select 和 button 之間的間距 */
+    }
+
+    .filter-section select {
+        padding: 0 10px; /* 移除上下 padding 並保持左右內邊距 */
+        font-size: 16px; /* 保持字體大小一致 */
+        height: 42px; /* 設定固定高度 */
+        line-height: 42px; /* 讓文字在高度內垂直居中 */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn-search {
+        background-color: #4DAECB;
+        color: white;
+        padding: 0 15px; /* 調整 padding 與 select 高度一致，移除上下 padding */
+        font-size: 16px; /* 保持字體大小一致 */
+        height: 42px; /* 設定固定高度 */
+        line-height: 42px; /* 讓按鈕文字或圖標垂直居中 */
+        border: none;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* 確保圖標在按鈕內垂直居中 */
+        cursor: pointer;
+    }
+
+    .btn-search img {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Media query for mobile devices */
+    @media (max-width: 768px) {
+        .filter-section {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-section select,
+        .filter-section .btn-search {
+            width: 100%; /* 在手機端全寬 */
+            margin-bottom: 10px;
+        }
+
+        .filter-section .btn-search {
+            width: auto; /* 設定為自適應寬度 */
+        }
+    }
+
+
+}
+
+a {
+    text-decoration: none; /* no underline */
 }

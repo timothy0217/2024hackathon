@@ -1,31 +1,86 @@
-<div class="vaccine-timeline">
-  <div class="vaccine-entry">
-    <div class="date">2024/09/04</div>
-    <div class="vaccine-info">
-      <h3>B 型肝炎疫苗 (HepB)</h3>
-      <p>施打疫苗日期: 2024/09/06</p>
-      <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
-      <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>補助查詢表單</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Header -->
+<div class="header">補助查詢</div>
+
+<div class="form-container">
+  <div class="vaccine-timeline-header">
+    <h2>疫苗軌跡</h2>
+      <div class="filter-section">
+        <form id="vaccineSearchForm">
+          <select id="year-select">
+            <option value="">請選擇年份</option>
+            <option value="2024">2024</option>
+          </select>
+
+          <select id="month-select">
+            <option value="">請選擇月份</option>
+            <option value="09">九月</option>
+            <option value="10">十月</option>
+          </select>
+
+          <div class="button-group">
+            <button type="submit" class="btn-query">查詢</button>
+            <button type="reset" class="btn-clear">清除</button>
+          </div>
+        </form>
+
+      </div>
     </div>
+    <br><br>
+
+    <div class="vaccine-timeline">
+      <!-- 疫苗記錄 -->
+      <div class="vaccine-entry">
+
+        <div class="vaccine-info">
+          <div class="date">2024/09/04</div>
+
+          <h3>B 型肝炎疫苗 (HepB)</h3>
+
+          <div class="input-section">
+            <input type="date" class="vaccine-date-input" placeholder="請選擇日期" />
+            <button class="btn-save">儲存</button>
+          </div>
+
+          <p>施打疫苗日期: 2024/09/06</p>
+          <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
+          <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
+        </div>
+      </div>
+
+      <div class="vaccine-entry">
+        <div class="vaccine-info">
+          <div class="date">2024/09/24</div>
+          <h3>卡介苗 (BCG)</h3>
+
+          <div class="input-section">
+            <input type="date" class="vaccine-date-input" placeholder="請選擇日期" />
+            <button class="btn-save">儲存</button>
+          </div>
+
+          <p>施打疫苗日期: 2024/09/24</p>
+          <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
+          <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <div class="footer">
+    <button id="tab-1" ><a href="subsidy-form.html" style="color: #007B80">補助查詢</a> </button>
+    <button id="tab-2" ><a href="vaccine-timeline.html" style="color: #007B80">疫苗軌跡</a></button>
   </div>
 
-  <div class="vaccine-entry">
-    <div class="date">2024/09/24</div>
-    <div class="vaccine-info">
-      <h3>卡介苗 (BCG)</h3>
-      <p>施打疫苗日期: 2024/09/24</p>
-      <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
-      <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
-    </div>
-  </div>
 
-  <div class="vaccine-entry">
-    <div class="date">2024/10/10</div>
-    <div class="vaccine-info">
-      <h3>B 型肝炎疫苗 (HepB)</h3>
-      <p>施打疫苗日期: 2024/10/10</p>
-      <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
-      <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
-    </div>
-  </div>
-</div>
+  <!-- Link to external JavaScript -->
+  <script src="scripts.js"></script>
+</body>
+</html>
