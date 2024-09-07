@@ -13,14 +13,14 @@ import serviceListJson from '../../public/mock/service_list.json';
 import caseProgressJson from '../../public/mock/case_progress.json';
 import BaseButton from '@/components/atoms/BaseButton.vue';
 import { get, child } from 'firebase/database';
-import { doc, setDoc,updateDoc } from 'firebase/firestore';
 import { collection, getDocs } from "firebase/firestore"; 
 import { db } from '../../firebaseConfig';
-
 
 import type { User } from '@/stores/user';
 import axios from 'axios';
 
+import type { IBaby, ICareType, IVaccineTracking, ISubsidy, IBirthOrderSubsidy, IDaycareSubsidy, ISubsidyDetail } from '@/test';  
+// 將需要的 class 從 babyClasses.ts 中引入
 
 const store = useFormStore();
 
@@ -110,6 +110,19 @@ const searchResultAgencyTypeSet = computed(
 );
 const searchResultTitle = computed(() => searchResult.value?.map((item) => item.title));
 
+const onSearchClick1 = () => {
+ //const partmentTreeSelectNodes = ref<EhsDepartmentTreeNodeDTO[]>([]);
+  const userData: IBaby = {
+    age: 30,
+    birthOrder: 11,
+    height: 173,
+    weight: 50,
+    isLowIncomeHousehold: true,
+    isIndigenous: true,
+  };
+  console.log(userData);
+};
+
 const onSearchClick = () => {
   const result = flatServiceList.value.filter((option) => option.title.includes(searchValue.value));
 
@@ -122,38 +135,16 @@ const onSearchClick = () => {
     isSearch.value = false;
   }
 };
-
-const WriteFireStore=async ()=>{
-  try {
-    const userRef = doc(db, 'users', 'userID'); // 自訂 userID 或使用 addDoc 自動生成 ID
-    const userData = {
-    name: 'John Doe',
-    age: 30,
-    email: 'john.doe@example.com'
-  };
-    await setDoc(userRef, userData);
-    console.log("Document successfully written!");
-  } catch (error) {
-    console.error("Error writing document: ", error);
-  }
-}
-
-const UpdateFireStore=async ()=>{
-  try {
-    const userRef = doc(db, 'users', 'userID'); // 指定要更新的文檔
-
-// 定義要更新的欄位和新值
-const updatedData = {
-  age: 30, // 例如更新 age 欄位
-  email: 'new.email@example.com' // 例如更新 email 欄位
-};
-
-await updateDoc(userRef, updatedData);
-console.log("Document successfully updated!");
-  } catch (error) {
-    console.error("Error writing document: ", error);
-  }
-
+const ReadRealtime=()=>{
+  get(realtimeRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            console.log(snapshot.val());
+        } else {
+            console.log('No data available');
+        }
+    }).catch((error) => {
+        console.error(error);
+    });  
 }
 
 const ReadFireStore=async ()=>{
@@ -176,6 +167,7 @@ const GetAPI = () => {
       console.error(error);
     });
 }
+
 
 // //發布
 // const GetAPI = () => {
@@ -224,13 +216,13 @@ const activeRecord = computed(() =>
     <ServiceTabsView v-model="activeTab">
       <template #tab0>
         <div class="py-4">
-          <div>
-            <RouterLink :to="{ name: 'Search' }">前往搜尋頁面</RouterLink>
-        </div>
           <section class="flex items-center px-4">
             <BaseInput v-model="searchValue" placeholder="您遇到哪些問題?" class="flex-grow" />
             <button class="search-button" @click="onSearchClick">
               <img src="@/assets/images/search-icon.svg" alt="搜尋" />
+            </button>
+            <button class="search-button" @click="onSearchClick1">
+              <img src="@/assets/images/search-icon.svg" alt="搜尋1" />
             </button>
           </section>
           <p class="text-grey-500 mt-4 mb-2 px-4">請選擇要申請的項目</p>
@@ -305,9 +297,8 @@ const activeRecord = computed(() =>
               </div>
             </li>
           </ul>
-          <BaseButton @click="WriteFireStore">寫入FireStore</BaseButton>
+          <BaseButton @click="ReadRealtime">讀取Realtime</BaseButton>
           <BaseButton @click="ReadFireStore">讀取FireStore</BaseButton>
-          <BaseButton @click="UpdateFireStore">更新FireStore</BaseButton>
           <BaseButton @click="GetAPI">讀取OpenAPI</BaseButton>
           <div v-show="isSearch && !searchResult?.length" class="flex flex-col items-center pt-40">
             <p class="text-primary-500 font-bold">查無任何申辦相關項目</p>
