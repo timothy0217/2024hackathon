@@ -9,6 +9,7 @@ using Google.Cloud.Firestore;
 using System.Globalization;
 using System.Formats.Asn1;
 using Newtonsoft.Json;
+using System.Dynamic;
 
 namespace CsvToFirestoreApp
 {
@@ -104,16 +105,17 @@ namespace CsvToFirestoreApp
 
         private async Task UploadJsonToFirestore(string filePath, CollectionReference collection)
         {
-            // Parse the JSON file
+            // 读取 JSON 文件内容
             string jsonContent = File.ReadAllText(filePath);
-            var data = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonContent);
 
-            // Add each record to the Firestore collection
-            foreach (var record in data)
-            {
-                await collection.AddAsync(record);
-            }
+            // 使用 JsonConvert 解析 JSON 为动态对象
+            var data = JsonConvert.DeserializeObject<ExpandoObject>(jsonContent);
+
+            // 将解析的 JSON 上传到 Firestore
+            await collection.AddAsync(data);
         }
+
+
 
     }
 }
