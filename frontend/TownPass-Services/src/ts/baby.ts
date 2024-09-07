@@ -4,7 +4,7 @@ export interface VaccineTracking {
   VaccineNameCN: string;
   VaccineNameEN: string;
   VaccinationSchedule: string;
-  Dose: string;
+  Dose: number;
   Contraindications: string;
 }
 
@@ -15,6 +15,7 @@ export interface Subsidies {
 
 export interface Baby {
   Age: string;
+  Birth:string;
   BirthOrder: string;
   Height: string;
   Weight: string;
