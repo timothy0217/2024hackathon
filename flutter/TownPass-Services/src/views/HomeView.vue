@@ -202,6 +202,9 @@ const activeRecord = computed(() =>
     <ServiceTabsView v-model="activeTab">
       <template #tab0>
         <div class="py-4">
+          <div>
+            <RouterLink :to="{ name: 'Search' }">前往搜尋頁面</RouterLink>
+        </div>
           <section class="flex items-center px-4">
             <BaseInput v-model="searchValue" placeholder="您遇到哪些問題?" class="flex-grow" />
             <button class="search-button" @click="onSearchClick">
