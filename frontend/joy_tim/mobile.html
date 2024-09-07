@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>補助查詢表單</title>
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">補助查詢</div>
+
+<!-- 分頁1 - 補助查詢表單 -->
+<div id="page-1" class="form-container">
+  <form id="queryForm">
+    <!-- 出生日期 -->
+    <label for="birthday">出生日期</label>
+    <input type="date" id="birthday" name="birthday" required>
+
+    <!-- 第幾胎 -->
+    <label for="birth-order">第幾胎</label>
+    <select id="birth-order" name="birth-order" required>
+      <option value="一胎">一胎</option>
+      <option value="二胎">二胎</option>
+      <option value="三胎">三胎</option>
+      <option value="四胎以上">四胎以上</option>
+    </select>
+
+    <!-- 幼稚園類型 -->
+    <label for="kindergarten-type">幼稚園類型</label>
+    <select id="kindergarten-type" name="kindergarten-type" required>
+      <option value="">請選擇</option>
+      <option value="公立">公立</option>
+      <option value="私立">私立</option>
+    </select>
+
+    <!-- 中低收入戶 -->
+    <div class="radio-group">
+      <label>中低收入戶</label>
+      <div class="radio-options">
+        <input type="radio" id="low-income-yes" name="low-income" value="yes" required>
+        <label for="low-income-yes">是</label>
+        <input type="radio" id="low-income-no" name="low-income" value="no" required>
+        <label for="low-income-no">否</label>
+      </div>
+    </div>
+
+    <!-- 原住民 -->
+    <div class="radio-group">
+      <label>原住民</label>
+      <div class="radio-options">
+        <input type="radio" id="aboriginal-yes" name="aboriginal" value="yes" required>
+        <label for="aboriginal-yes">是</label>
+        <input type="radio" id="aboriginal-no" name="aboriginal" value="no" required>
+        <label for="aboriginal-no">否</label>
+      </div>
+    </div>
+
+    <!-- 查詢和清除按鈕 -->
+    <div class="button-group">
+      <button type="submit" class="btn-query">查詢</button>
+      <button type="reset" class="btn-clear">清除</button>
+    </div>
+  </form>
+
+  <!-- 查詢結果區域 -->
+  <div id="queryResults" class="hidden">
+<!--    <div id="queryResults" class="hidden">-->
+
+    <details open>
+      <summary>社會局 可補助<span class="amount">$5000</span></summary>
+      <div class="subsidy-info">
+        <p>以家長雙方自然人憑證或健保卡就可以申請。</p>
+        <p>112年1月起已經「取消」稅率限制（不排富）。</p>
+        <p>目前尚未申請者，於112年12月31日前申請可追溯至今（112）年度符合資格月份。</p>
+      </div>
+    </details>
+
+    <details open>
+      <summary>政府機關 可補助<span class="amount">$5000</span></summary>
+      <div class="subsidy-info">
+        <p>我國籍兒童且申請領時符合下列情形者：</p>
+        <p>(一) 未滿2歲。</p>
+        <p>(二) 完成出生登記或初設戶籍登記。</p>
+        <p>(三) 未經政府公費安置收容。</p>
+        <p>(四) 未接受公共化或準公共托育服務。</p>
+      </div>
+    </details>
+
+    <details open>
+      <summary>教育部 可補助<span class="amount">$3000</span></summary>
+      <div class="subsidy-info">
+        <p>如申請人其一方、雙方或子女有收養等特殊情況，請檢附相關證明文件。</p>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- 分頁2 - 疫苗軌跡 -->
+<div id="page-2" class="form-container hidden">
+  <h2>疫苗軌跡</h2>
+  <p>這裡顯示疫苗相關資訊。</p>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <button id="tab-1" class="active" onclick="showPage(1)">補助查詢</button>
+  <button id="tab-2" onclick="showPage(2)">疫苗軌跡</button>
+</div>
+
+<!-- Link to external JavaScript -->
+<script src="scripts.js"></script>
+</body>
+</html>
