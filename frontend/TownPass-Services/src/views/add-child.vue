@@ -74,19 +74,31 @@ const ResetAll = () =>{
 const ResetDaycareVali = () =>{
 
   const label = document.querySelector('.Daycare');
-    label.classList.add('vali');
+  if (label) {
+  label.classList.add('vali');
+} else {
+  console.error('Element with class "Daycare" not found');
+}
 }
 
 const ResetDateVali = () =>{
 
 const label = document.querySelector('.birthvali');
+if (label) {
   label.classList.add('vali');
+} else {
+  console.error('Element with class "Daycare" not found');
+}
 }
 
 const ResetDaycare = () =>{
   Baby123.value.Daycare = '';
   const label = document.querySelector('.Subsidyvali');
-    label.classList.add('vali');
+  if (label) {
+  label.classList.add('vali');
+} else {
+  console.error('Element with class "Daycare" not found');
+}
 }
 
 /// 處理日期為 YYYY-MM-DD 格式的計算屬性
