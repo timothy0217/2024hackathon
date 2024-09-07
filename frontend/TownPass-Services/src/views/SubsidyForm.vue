@@ -39,10 +39,10 @@ const calculateAge = (birthDate: string): number => {
 };
 
 const Baby123 = ref<Partial<Baby>>({
-  Birth:'2020-01-01',
+  Birth:'',
   SubsidyName: '' , // 初始化為空字串以顯示「請選擇」
   Daycare: '',
-  BirthOrder:'',
+  BirthOrder:'1',
   Age:"1",
   Subsidies:{
     Details: [],
@@ -73,13 +73,24 @@ const ResetAll = () =>{
 }
 
 const test = () => {
-  
-  ReadFireStore1()
+  if(formattedBirth.value === ''){
+    const label = document.querySelector('.birthvali');
+    label.classList.remove('vali');
+  }
+  if(Baby123.value.SubsidyName === ''){
+    const label = document.querySelector('.Subsidyvali');
+    label.classList.remove('vali');
+  }
+if(Baby123.value.Daycare === ''){
+  const label = document.querySelector('.Daycare');
+  label.classList.remove('vali');
+}
+  ReadFireStore1();
 
-  console.log(Baby123.value.Birth);
-  console.log(Baby123.value.BirthOrder);
-  console.log(Baby123.value.SubsidyName);
-  console.log(Baby123.value.Daycare);
+  // console.log(Baby123.value.Birth);
+  // console.log(Baby123.value.BirthOrder);
+  // console.log(Baby123.value.SubsidyName);
+  // console.log(Baby123.value.Daycare);
   // 你可以在這裡執行更多邏輯
 };
 
@@ -91,8 +102,8 @@ async function ReadFireStore1(ageFilter: number) {
       const data = doc.data() as Subsidies;
       console.log('Subsidy:', data);
       // 假設我們要檢查 subsidies[0].details.age 是否等於 ageFilter
-      if (data.subsidies[0].details.length > 0) {
-        const matchingDetail = data.subsidies[0].details.filter(detail => detail.subsidyName === Baby123.value.SubsidyName && detail.age === calculateAge(Baby123.value.Birth) && (detail.daycare === Baby123.value.Daycare||Baby123.value.SubsidyName === '育兒津貼'));
+      if (data.subsidies[Number(Baby123.value.BirthOrder)- 1].details.length > 0) {
+        const matchingDetail = data.subsidies[Number(Baby123.value.BirthOrder)- 1].details.filter(detail => detail.subsidyName === Baby123.value.SubsidyName && detail.age === calculateAge(Baby123.value.Birth) && (detail.daycare === Baby123.value.Daycare||Baby123.value.SubsidyName === '育兒津貼'));
         Baby123.value.Subsidies.Details = matchingDetail;
         if (matchingDetail) {
           console.log('Matching Subsidy:', matchingDetail);
@@ -108,8 +119,22 @@ async function ReadFireStore1(ageFilter: number) {
   }
 }
 
+const ResetDaycareVali = () =>{
+
+  const label = document.querySelector('.Daycare');
+    label.classList.add('vali');
+}
+
+const ResetDateVali = () =>{
+
+const label = document.querySelector('.birthvali');
+  label.classList.add('vali');
+}
+
 const ResetDaycare = () =>{
   Baby123.value.Daycare = '';
+  const label = document.querySelector('.Subsidyvali');
+    label.classList.add('vali');
 }
 
 /// 處理日期為 YYYY-MM-DD 格式的計算屬性
@@ -165,15 +190,18 @@ useHandleConnectionData(handleUserInfo);
       <form>
         <!-- 出生日期 -->
         <label for="birthday">出生日期</label>
-        <input type="date" v-model="formattedBirth" required>
+        <input type="date" v-model="formattedBirth" @change="ResetDateVali()" required>
+        <div class="birthvali vali" >
+          <label style="color: red;">請輸入出生日期</label>
+        </div>
+        
 
         <!-- 第幾胎 -->
         <label for="birth-order">第幾胎</label>
         <select v-model="Baby123.BirthOrder" required>
-          <option value="">請選擇</option>
-          <option value="一胎">一胎</option>
-          <option value="二胎">二胎</option>
-          <option value="三胎以上">三胎以上</option>
+          <option value="1">一胎</option>
+          <option value="2">二胎</option>
+          <option value="3">三胎以上</option>
         </select>
 
         <!-- 扶養類型 -->
@@ -184,40 +212,56 @@ useHandleConnectionData(handleUserInfo);
       <option value="托育補助">托育</option>
       <option value="幼兒園補助">幼兒園</option>
     </select>
+    <div class="Subsidyvali vali" >
+          <label style="color: red;">請輸入扶養類型</label>
+        </div>
 
     <!-- 根據 SubsidyName 顯示不同的下拉選單 -->
     
     <!-- 育兒類型 -->
     <div v-if="Baby123.SubsidyName === '育兒津貼'">
       <label for="Parenting-type">育兒類型</label>
-      <select v-model="Baby123.Daycare" required>
+      <select v-model="Baby123.Daycare" @change="ResetDaycareVali()" required>
         <option value="">請選擇</option>
         <option value="父母">父母、親人</option>
         <option value="保母">保母(無政府簽約)</option>
         <option value="托嬰中心">托嬰中心(無政府簽約)</option>
       </select>
+    <div class="Daycare vali" >
+          <label style="color: red;">請輸入育兒類型</label>
+        </div>
     </div>
 
     <!-- 托育類型 -->
     <div v-if="Baby123.SubsidyName === '托育補助'">
       <label for="Daycare-type">托育類型</label>
-      <select v-model="Baby123.Daycare" required>
+      <select v-model="Baby123.Daycare" @change="ResetDaycareVali()" required>
         <option value="">請選擇</option>
         <option value="公托">公托</option>
         <option value="準公托">準公托</option>
       </select>
+    <div class="Daycare vali" >
+          <label style="color: red;">請輸入托育類型</label>
+        </div>
     </div>
+
+
 
     <!-- 幼兒園類型 -->
     <div v-if="Baby123.SubsidyName === '幼兒園補助'">
       <label for="kindergarten-type">幼兒園類型</label>
-      <select v-model="Baby123.Daycare" required>
+      <select v-model="Baby123.Daycare" @change="ResetDaycareVali()" required>
         <option value="">請選擇</option>
         <option value="公幼">公幼</option>
         <option value="非營利">非營利</option>
         <option value="準公幼">準公幼</option>
       </select>
+    <div class="Daycare vali" >
+          <label style="color: red;">請輸入幼兒園類型</label>
+        </div>
     </div>
+
+
 
         <!-- 查詢和清除按鈕 -->
         <div class="button-group">
@@ -232,8 +276,39 @@ useHandleConnectionData(handleUserInfo);
         <details>
         <summary>{{detail.unit}} 可補助<span class="amount">$ {{ detail.amount }}</span></summary>
         <div class="subsidy-info">
-          <p class="stars">{{ detail.subsidyName }}</p>
-        </div>
+          <div v-if="Baby123.SubsidyName === '育兒津貼'">
+            <a href="https://e-service.k12ea.gov.tw/" target="_blank">育兒補助連結</a>
+          <p class="stars">育兒津貼 0~5 歲</p>
+          <p>
+請填具申請書並檢附相關文件，親送、郵寄，向幼兒現戶籍所在地的以下地點提出申請：
+嘉義市：請親送或郵寄至聯合里辦公處。
+其他21縣（市）：請親送或郵寄至幼兒戶籍所在地的鄉（鎮、市、區）公所。
+</p>
+</div>
+
+<div v-if="Baby123.SubsidyName === '托育補助'">
+  
+  <a href="https://cwisonline.sfaa.gov.tw/" target="_blank">托育補助連結</a>
+          <p class="stars">申請資格</p>
+          <p>
+一、0至未滿3歲之幼兒、沒有正在領育兒津貼或接受政府安置收容，且有送公共化托育、準公托、保母送托或與政府簽約之公設民營托嬰中心者。
+</p>
+<p>二、2024年起調高，公共托育的補助將從每月5,500元提升至7,000元，而準公共托育的補助將從每月8,500元增加到1萬3,000元。</p>
+<p>備註:第二胎加1000、第三胎以上加2000。</p>
+</div>
+
+<div v-if="Baby123.SubsidyName === '幼兒園補助'">
+  
+  <a href="https://e-service.k12ea.gov.tw/" target="_blank">幼兒園補助連結</a>
+          <p class="stars">申辦資格</p>
+          <p>
+一、2至未滿5歲幼兒育兒津貼之幼兒為實際年齡滿2歲至未滿5歲學齡的我國籍幼兒(113學年度為108年9月2日(含)以後出生至生理年齡滿2歲)。
+</p>
+<p>
+二、5歲至入國民小學前幼兒就學補助之幼兒為「學齡滿5歲」至「學齡未滿6歲」的我國籍幼兒（113學年度為107年9月2日(含)至108年9月1日間出生，即尚未就讀國民小學者）。
+</p>
+</div>
+</div>
       </details>
       </li>
     </ul>
@@ -248,6 +323,10 @@ body {
   background-color: #EAF8FB;
   padding: 20px;
   margin: 0;
+}
+
+.vali{
+  display: none;
 }
 
 .form-container {
