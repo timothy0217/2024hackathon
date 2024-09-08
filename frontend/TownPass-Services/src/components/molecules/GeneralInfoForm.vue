@@ -3,7 +3,7 @@ import { ref, computed, reactive, watch } from 'vue';
 import BaseInput from '@/components/atoms/BaseInput.vue';
 import BaseSelect from '@/components/atoms/BaseSelect.vue';
 import { city } from '@/zipcode/city';
-import { county } from '@/ts/baby';
+// import { county } from '@/ts/baby';
 
 export interface BasicForm {
   mail: string;

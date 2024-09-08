@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, type Ref } from 'vue';
+import { computed, onBeforeMount, onMounted, reactive, ref, type Ref } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useCouponStore } from '@/stores/coupon';
@@ -8,31 +8,47 @@ import { useHandleConnectionData } from '@/composables/useHandleConnectionData';
 import BaseDialog from '@/components/atoms/BaseDialog.vue';
 import CouponResultItem from '@/components/molecules/CouponResultItem.vue';
 import { vaccines } from '@/zipcode/vaccine';
-import type { Baby} from '@/ts/baby';  
+import type { Baby, VaccineTracking} from '@/ts/baby';  
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 // 將需要的 class 從 babyClasses.ts 中引入
 
+const year =ref();
+const month =ref();
 
 const store = useCouponStore();
 const route = useRoute();
 const router = useRouter();
-
+const lists =ref<VaccineTracking[]>();
+    const user =ref<Baby>();
 const baby = ref<Partial<Baby>>({
-  Age: 0,
+Baby:{
+    Age: '0',
   Birthday: '',
-  BirthOrder: '',//第幾胎
+  BirthOrder: '2024-01-01',//第幾胎
   Height: '',
   Weight: '',
   LowIncomeHousehold: '',
   IsIndigenous: false,
   SubsidyName: '',
   Daycare: '',
-  VaccineTracking: [],
+  VaccineTracking: [
+    {
+        Vaccinated: 0,
+        Date: '',
+        VaccineNameCN: '',
+        VaccineNameEN: '',
+        VaccinationSchedule: '',
+        Dose: 0,
+        Contraindications: ''
+    }
+  ],
   Subsidies: {
     Details:[],
     Amount:''
   }
+}
+  
 
 });
 
@@ -41,11 +57,33 @@ async function ReadFireStore1() {
   try {
     const querySnapshot = await getDocs(collection(db, 'Baby'));
     querySnapshot.forEach((doc) => {
-      const data = doc.data() as Baby;
+       
+      const cc = doc.data() as Baby;
+
       // 更新响应式对象
-      baby.value=data;
-      console.log(data);
-      console.log(baby);
+      console.log(cc.Baby.VaccineTracking);
+      lists.value =cc.Baby.VaccineTracking;
+      user.value =cc;
+const bir ='2023-09-07';
+lists.value.forEach((x=>{
+        if(x.Dose==1){
+            x.VaccinationSchedule = addDaysToBirthDay(bir, x.VaccinationSchedule);
+        
+        }
+        else if(x.Dose==2){
+            x.VaccinationSchedule = addDaysToBirthDay(bir, x.VaccinationSchedule);
+        }
+        else if(x.Dose==3){
+            x.VaccinationSchedule = addDaysToBirthDay(bir, x.VaccinationSchedule);
+        }
+        else if(x.Dose==4){
+            x.VaccinationSchedule = addDaysToBirthDay(bir, x.VaccinationSchedule);
+        }
+        
+        //x.VaccinationSchedule = user.value?.Birth+x.VaccinationSchedule.split('|')[0];
+      }));
+      //baby.value.VaccineTracking =lists.value;
+      console.log(user.value);
       //Object.assign(baby.value, data);
     });
   } catch (error) {
@@ -53,8 +91,57 @@ async function ReadFireStore1() {
   }
 }
 
-onMounted(async () => {
-  await ReadFireStore1();
+function addDaysToBirthDay(birthDay: string, vaccinationSchedule: string): string {
+  // Convert BirthDay string to a Date object
+   var num = vaccinationSchedule.split('|')[0];
+
+  var year = parseInt(birthDay.split('-')[0]);
+  var month = parseInt(birthDay.split('-')[1]);
+  var day = parseInt(birthDay.split('-')[2]);
+
+
+   month =(month)+parseInt(num);
+
+   if (month>12)
+   {
+    month -=12;
+    year +=1;
+   }
+
+   if (month>12)
+   {
+    month -=12;
+    year +=1;
+   }
+
+  // Add VaccinationSchedule days to the BirthDay
+  
+  return `${year}-${month}-${day}`;
+}
+
+const querydata=()=>{
+    
+    var month_ ="1";
+    if (month.value=="10"|| month.value=="11"|| month.value=="12")
+    {
+        month_ = month.value;
+    } 
+    else
+    {
+        month_ = month.value.charAt(month.value.length - 1);
+    }
+
+    console.log( month.value);
+    console.log( year.value);
+
+    console.log( month_);
+
+    lists.value = lists.value?.filter(m => m.VaccinationSchedule.split('-')[0]===year.value&&m.VaccinationSchedule.split('-')[1]===month_);
+    console.log( lists.value);
+}
+
+onMounted(() => {
+  ReadFireStore1();
   
 });
 </script>
@@ -77,19 +164,29 @@ onMounted(async () => {
     <h2>疫苗軌跡</h2>
       <div class="filter-section">
         <form id="vaccineSearchForm">
-          <select id="year-select">
+          <select v-model="year">
             <option value="">請選擇年份</option>
             <option value="2024">2024</option>
           </select>
 
-          <select id="month-select">
+          <select v-model="month">
             <option value="">請選擇月份</option>
+            <option value="01">一月</option>
+            <option value="02">二月</option>
+            <option value="03">三月</option>
+            <option value="04">四月</option>
+            <option value="05">五月</option>
+            <option value="06">六月</option>
+            <option value="07">七月</option>
+            <option value="08">八月</option>
             <option value="09">九月</option>
             <option value="10">十月</option>
+            <option value="11">十一月</option>
+            <option value="12">十二月</option>
           </select>
 
           <div class="button-group">
-            <button type="submit" class="btn-query">查詢</button>
+            <button type="button" class="btn-query" @click="querydata">查詢</button>
             <button type="reset" class="btn-clear">清除</button>
           </div>
         </form>
@@ -98,23 +195,23 @@ onMounted(async () => {
     <br><br>
 
     <div class="vaccine-timeline">
-    <div v-if="baby.Subsidies.Details.length>0"  class="vaccine-entry">
+    <div v-for="(baby, index) in lists" :key="index"  class="vaccine-entry">
       <div class="vaccine-info">
-        <div class="date">{{ vaccine.Date }}</div>
-        <h3>{{ vaccine.VaccineNameCN }} ({{ vaccine.VaccineNameEN }})</h3>
+        <div class="date">{{ baby.VaccinationSchedule }}</div>
+        <h3>{{ baby.VaccineNameCN }} ({{ baby.VaccineNameEN }})</h3>
 
-        <div class="input-section">
-          <!-- 使用 v-model 綁定 input 的值 -->
+        <!-- <div class="input-section">
+
           <input
             type="date"
             class="vaccine-date-input"
-            v-model="vaccine.Date"
+            v-model="lists[1].Date"
             placeholder="請選擇日期"
           />
           <button class="btn-save">儲存</button>
-        </div>
+        </div> -->
 
-        <p>施打疫苗日期: {{ vaccine.Date }}</p>
+        <!-- <p>施打疫苗日期: {{ lists[1].Date }}</p> -->
         <p>1. 疑似結核病人及疑似被結核桿菌感染者，勿直接接種卡介苗。</p>
         <p>2. 發燒、皮膚病、嚴重濕疹、慢性病、免疫機能不全等情況下不可接種。</p>
       </div>
@@ -131,7 +228,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-
 body {
     font-family: Arial, sans-serif;
     background-color: #EAF8FB;
@@ -147,6 +243,12 @@ body {
     font-weight: bold;
     color: #333;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header.index{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .footer {
@@ -182,6 +284,19 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     margin: 80px auto 80px;
+}
+
+.form-container.no-style{
+    background-color: transparent;
+    box-shadow: none;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    display: contents;
+}
+
+.form-container.no-style video{
+    width: 100%;
 }
 
 .hidden {
@@ -273,6 +388,8 @@ body {
     display: flex;
     justify-content: space-between;
 }
+
+.form-container
 
 details {
     background-color: #F5F5F5;
@@ -487,4 +604,126 @@ details[open] summary {
 
     .vaccine-info h3 {
         font-size: 18px;
-      
+        font-weight: bold;
+        color: #007B80;
+        margin-bottom: 10px;
+    }
+    /* 調整篩選區域的 select 和 button 對齊 */
+    .filter-section {
+        display: flex;
+        align-items: center; /* 確保 select 和 button 在垂直方向對齊 */
+        gap: 10px; /* 控制 select 和 button 之間的間距 */
+    }
+
+    .filter-section select {
+        padding: 0 10px; /* 移除上下 padding 並保持左右內邊距 */
+        font-size: 16px; /* 保持字體大小一致 */
+        height: 42px; /* 設定固定高度 */
+        line-height: 42px; /* 讓文字在高度內垂直居中 */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn-search {
+        background-color: #4DAECB;
+        color: white;
+        padding: 0 15px; /* 調整 padding 與 select 高度一致，移除上下 padding */
+        font-size: 16px; /* 保持字體大小一致 */
+        height: 42px; /* 設定固定高度 */
+        line-height: 42px; /* 讓按鈕文字或圖標垂直居中 */
+        border: none;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* 確保圖標在按鈕內垂直居中 */
+        cursor: pointer;
+    }
+
+    .btn-search img {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Media query for mobile devices */
+    @media (max-width: 768px) {
+        .filter-section {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-section select,
+        .filter-section .btn-search {
+            width: 100%; /* 在手機端全寬 */
+            margin-bottom: 10px;
+        }
+
+        .filter-section .btn-search {
+            width: auto; /* 設定為自適應寬度 */
+        }
+    }
+
+
+}
+
+a {
+    text-decoration: none; /* no underline */
+}
+/* 彈窗背景 */
+.nav-modal {
+    display: none; /* 初始狀態為隱藏 */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4); /* 半透明背景 */
+  }
+  
+  /* 彈窗內容 */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 中間對齊 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* 可以根據需要調整大小 */
+    border-radius: 8px;
+  }
+  
+  /* 彈窗標題 */
+  .details-modal-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* 彈窗內容 */
+  .details-modal-content {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .alert{
+    position: absolute; /* 絕對定位 */
+    top: 20%;
+    left: 50%; /* 水平居中，根據 .form-container 的寬度 */
+    transform: translate(-50%, -50%); /* 調整元素位置，使其真正居中 */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px; /* 根據需要調整最大寬度 */
+    z-index: 10; /* 確保在其他內容上面 */
+    text-align: center; /* 使 alert 內容居中 */
+}
+
+.modal-content button{
+    display: none;
+}
+
+.alert span{
+    color: #d45251;
+}
+</style>

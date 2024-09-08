@@ -157,6 +157,9 @@ const goHome = () => {
         </select>
 
         <!-- 扶養類型 -->
+    <div class="Subsidyvali vali" >
+          <label style="color: red;">請輸入扶養類型</label>
+        </div>
     <label for="SubsidyName">扶養類型</label>
     <select v-model="Baby123.SubsidyName" @change="ResetDaycare()" required>
       <option value="">請選擇</option>
@@ -164,13 +167,14 @@ const goHome = () => {
       <option value="托育補助">托育</option>
       <option value="幼兒園補助">幼兒園</option>
     </select>
-    <div class="Subsidyvali vali" >
-          <label style="color: red;">請輸入扶養類型</label>
-        </div>
 
     <!-- 根據 SubsidyName 顯示不同的下拉選單 -->
     
     <!-- 育兒類型 -->
+    <div class="Daycare vali" >
+          <label style="color: red;">請輸入育兒類型</label>
+        </div>
+    
     <div v-if="Baby123.SubsidyName === '育兒津貼'">
       <label for="Parenting-type">育兒類型</label>
       <select v-model="Baby123.Daycare" @change="ResetDaycareVali()" required>
@@ -179,12 +183,12 @@ const goHome = () => {
         <option value="保母">保母(無政府簽約)</option>
         <option value="托嬰中心">托嬰中心(無政府簽約)</option>
       </select>
-    <div class="Daycare vali" >
-          <label style="color: red;">請輸入育兒類型</label>
-        </div>
     </div>
 
     <!-- 托育類型 -->
+    <div class="Daycare vali" >
+          <label style="color: red;">請輸入托育類型</label>
+        </div>
     <div v-if="Baby123.SubsidyName === '托育補助'">
       <label for="Daycare-type">托育類型</label>
       <select v-model="Baby123.Daycare" @change="ResetDaycareVali()" required>
@@ -192,14 +196,14 @@ const goHome = () => {
         <option value="公托">公托</option>
         <option value="準公托">準公托</option>
       </select>
-    <div class="Daycare vali" >
-          <label style="color: red;">請輸入托育類型</label>
-        </div>
     </div>
 
 
 
     <!-- 幼兒園類型 -->
+    <div class="Daycare vali" >
+          <label style="color: red;">請輸入幼兒園類型</label>
+        </div>
     <div v-if="Baby123.SubsidyName === '幼兒園補助'">
       <label for="kindergarten-type">幼兒園類型</label>
       <select v-model="Baby123.Daycare" @change="ResetDaycareVali()" required>
@@ -208,9 +212,6 @@ const goHome = () => {
         <option value="非營利">非營利</option>
         <option value="準公幼">準公幼</option>
       </select>
-    <div class="Daycare vali" >
-          <label style="color: red;">請輸入幼兒園類型</label>
-        </div>
     </div>
       </form>
       <div class="button-group">

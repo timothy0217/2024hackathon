@@ -45,8 +45,10 @@ const Baby123 = ref<Partial<Baby>>({
   BirthOrder:'1',
   Age:"1",
   Subsidies:{
-    Details: [],
-    Amount: ''
+    subsidies:{
+    Amount: '',
+    Details:[],
+},
   }
 });
 
@@ -85,31 +87,29 @@ if(Baby123.value.Daycare === ''){
   const label = document.querySelector('.Daycare');
   label.classList.remove('vali');
 }
+if(formattedBirth.value != '' && Baby123.value.SubsidyName != '' && Baby123.value.Daycare != ''){
   ReadFireStore1();
+}
 
-  // console.log(Baby123.value.Birth);
-  // console.log(Baby123.value.BirthOrder);
-  // console.log(Baby123.value.SubsidyName);
-  // console.log(Baby123.value.Daycare);
+  console.log(Baby123.value.Birth);
+  console.log(Baby123.value.BirthOrder);
+  console.log(Baby123.value.SubsidyName);
+  console.log(Baby123.value.Daycare);
   // 你可以在這裡執行更多邏輯
 };
 
-async function ReadFireStore1(ageFilter: number) {
+async function ReadFireStore1() {
   try {
     const querySnapshot = await getDocs(collection(db, 'Subsidies'));
 
     querySnapshot.forEach((doc) => {
       const data = doc.data() as Subsidies;
+      const subsidies = data.subsidies;
       console.log('Subsidy:', data);
       // 假設我們要檢查 subsidies[0].details.age 是否等於 ageFilter
-      if (data.subsidies[Number(Baby123.value.BirthOrder)- 1].details.length > 0) {
-        const matchingDetail = data.subsidies[Number(Baby123.value.BirthOrder)- 1].details.filter(detail => detail.subsidyName === Baby123.value.SubsidyName && detail.age === calculateAge(Baby123.value.Birth) && (detail.daycare === Baby123.value.Daycare||Baby123.value.SubsidyName === '育兒津貼'));
-        Baby123.value.Subsidies.Details = matchingDetail;
-        if (matchingDetail) {
-          console.log('Matching Subsidy:', matchingDetail);
-        } else {
-          console.log(`No matching subsidies with age ${ageFilter}`);
-        }
+      if (subsidies[Number(Baby123.value.BirthOrder)- 1].details.length > 0) {
+        const matchingDetail = subsidies[Number(Baby123.value.BirthOrder)- 1].details.filter(detail => detail.subsidyName === Baby123.value.SubsidyName && detail.age === calculateAge(Baby123.value.Birth) && (detail.daycare === Baby123.value.Daycare||Baby123.value.SubsidyName === '育兒津貼'));
+        Baby123.value.Subsidies.subsidies.Details = matchingDetail;
       } else {
         console.log('No details available in this subsidy.');
       }
@@ -133,6 +133,7 @@ const label = document.querySelector('.birthvali');
 
 const ResetDaycare = () =>{
   Baby123.value.Daycare = '';
+  Baby123.value.Subsidies.subsidies.Details=[];
   const label = document.querySelector('.Subsidyvali');
     label.classList.add('vali');
 }
@@ -186,6 +187,12 @@ useHandleConnectionData(handleUserInfo);
 
 <template>
   <main>
+    <div class="header index">
+      <RouterLink to="/" style="color: #007B80"><img src="/image/home.png" class="nav" style="width: 56px;"></RouterLink>
+      <span>補助查詢</span>
+      <div class="space"></div>
+    </div>
+    
     <div class="form-container">
       <form>
         <!-- 出生日期 -->
@@ -270,14 +277,15 @@ useHandleConnectionData(handleUserInfo);
         </div>
       </form>
 
-      <div v-if=" Baby123.Subsidies.Details.length > 0 ">
+      <div v-if="Baby123.SubsidyName === '育兒津貼'||Baby123.SubsidyName === '托育補助'">
+      <div class="money" v-if=" Baby123.Subsidies.subsidies.Details.length > 0 ">
         <ul>
-      <li v-for="detail in Baby123.Subsidies.Details" :key="detail.subsidyName">
+      <li v-for="detail in Baby123.Subsidies.subsidies.Details" :key="detail.subsidyName">
         <details>
         <summary>{{detail.unit}} 可補助<span class="amount">$ {{ detail.amount }}</span></summary>
         <div class="subsidy-info">
-          <div v-if="Baby123.SubsidyName === '育兒津貼'">
-            <a href="https://e-service.k12ea.gov.tw/" target="_blank">育兒補助連結</a>
+          <div class="money-result" v-if="Baby123.SubsidyName === '育兒津貼'">
+            <a href="https://e-service.k12ea.gov.tw/" target="_blank">育兒連結</a>
           <p class="stars">育兒津貼 0~5 歲</p>
           <p>
 請填具申請書並檢附相關文件，親送、郵寄，向幼兒現戶籍所在地的以下地點提出申請：
@@ -287,8 +295,7 @@ useHandleConnectionData(handleUserInfo);
 </div>
 
 <div v-if="Baby123.SubsidyName === '托育補助'">
-  
-  <a href="https://cwisonline.sfaa.gov.tw/" target="_blank">托育補助連結</a>
+  <a href="https://cwisonline.sfaa.gov.tw/" target="_blank">托育連結</a>
           <p class="stars">申請資格</p>
           <p>
 一、0至未滿3歲之幼兒、沒有正在領育兒津貼或接受政府安置收容，且有送公共化托育、準公托、保母送托或與政府簽約之公設民營托嬰中心者。
@@ -296,10 +303,22 @@ useHandleConnectionData(handleUserInfo);
 <p>二、2024年起調高，公共托育的補助將從每月5,500元提升至7,000元，而準公共托育的補助將從每月8,500元增加到1萬3,000元。</p>
 <p>備註:第二胎加1000、第三胎以上加2000。</p>
 </div>
-
+</div>
+      </details>
+      </li>
+    </ul>
+</div>
+</div>
 <div v-if="Baby123.SubsidyName === '幼兒園補助'">
+      <div v-if=" Baby123.Subsidies.subsidies.Details.length > 0 ">
+        <ul>
+      <li v-for="detail in Baby123.Subsidies.subsidies.Details" :key="detail.subsidyName">
+        <details>
+        <summary>{{detail.unit}} 最多自付費用<span class="amount">$ {{ detail.amount }}</span></summary>
+        <div class="subsidy-info">
+<div v-if="Baby123.SubsidyName === '幼兒園補助'">
+  <a href="https://cwisonline.sfaa.gov.tw/" target="_blank">幼兒園補助連結</a>
   
-  <a href="https://e-service.k12ea.gov.tw/" target="_blank">幼兒園補助連結</a>
           <p class="stars">申辦資格</p>
           <p>
 一、2至未滿5歲幼兒育兒津貼之幼兒為實際年齡滿2歲至未滿5歲學齡的我國籍幼兒(113學年度為108年9月2日(含)以後出生至生理年齡滿2歲)。
@@ -314,7 +333,17 @@ useHandleConnectionData(handleUserInfo);
     </ul>
 </div>
 </div>
+</div>
   </main>
+    <!-- Footer -->
+    <div class="footer">
+    <button id="tab-1">
+  <RouterLink to="/subsidyform" style="color: #007B80">補助查詢</RouterLink>
+</button>
+      <button id="tab-2">
+  <RouterLink to="/vaccine-timeline" style="color: #007B80">疫苗軌跡</RouterLink>
+</button>
+  </div>
 </template>
 
 <style scoped>
@@ -441,5 +470,30 @@ details[open] summary {
 
 .subsidy-info .stars {
   color: #333;
+}
+.money ul{
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.money-result a{
+  color: #4DAECB;
+  font-weight: 600;
+}
+
+.header {
+    background-color: #ffffff;
+    text-align: center;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header.index{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>

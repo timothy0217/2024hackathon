@@ -24,27 +24,38 @@ const year = ref('');
 const month = ref('');
 const activeTab = ref(1);
 const store = useFormStore();
+const showAlert = ref(true); // 新增状态来控制 alert 的显示
+
+let alertTimeout: number | undefined;
 
 store.reset();
 
 const userStore = useUserStore();
-
 const { user } = storeToRefs(userStore);
 
 const handleUserInfo = (event: { data: string }) => {
   const result: { name: string; data: User } = JSON.parse(event.data);
-
   user.value = result.data;
 };
 
 // 打開彈窗
-const openModal=()=> {
+const openModal = () => {
   showModal.value = true;
+  showAlert.value = true; // 确保 alert 显示
+  // 设置 1 秒后自动隐藏 alert
+  alertTimeout = window.setTimeout(() => {
+    showAlert.value = false;
+  }, 0);
 }
 
 // 關閉彈窗
-const closeModal=()=> {
-  showModal.value = false;
+const closeModal = () => {
+  showModal.value = false;  
+  // 清除定时器
+  if (alertTimeout !== undefined) {
+    clearTimeout(alertTimeout);
+    alertTimeout = undefined;
+  }
 }
 
 // 設置疫苗搜尋功能
@@ -78,7 +89,6 @@ const showPage = (pageNumber: number) => {
   localStorage.setItem('activeTab', pageNumber.toString());
 }
 
-
 // 初始化頁面
 onMounted(() => {
   const savedTab = localStorage.getItem('activeTab');
@@ -87,9 +97,13 @@ onMounted(() => {
   } else {
     showPage(1);
   }
+  // 清除定时器
+  if (alertTimeout !== undefined) {
+    clearTimeout(alertTimeout);
+  }
 });
-
 </script>
+
 
 <template>
   <main>
@@ -108,27 +122,25 @@ onMounted(() => {
     </div>
 
     <!-- Alert -->
-    <div class="alert">
+    <div class="alert"  v-if="showAlert">
       <span>2024/09/03 將要施打Ｂ型肝炎疫苗(HepB)疫苗</span>
     </div>
 
-    <!-- Modal -->
-    <div class="nav-modal" v-if="showModal">
-  <div class="modal-content">
+<!-- Modal -->
+<div class="nav-modal" v-if="showModal" @click="closeModal">
+  <div class="modal-content" @click.stop>
     <div class="details-modal-title">
-      <img src="/image/people.png">
+      <img src="/image/people.png" alt="Person Icon">
       <span>王大明</span>
     </div>
     <RouterLink to="/addchild" class="details-modal-content">
-  <img src="/image/add.png" alt="Add Child">
-  <span>新增孩童</span>
-</RouterLink>
+      <img src="/image/add.png" alt="Add Child">
+      <span>新增孩童</span>
+    </RouterLink>
     <button id="close-modal" @click="closeModal">Close</button>
-    <button id="tab-1">
-  <RouterLink to="/subsidyform" style="color: #007B80">補助查詢</RouterLink>
-</button>
   </div>
 </div>
+
 
 
     <!-- Footer -->
