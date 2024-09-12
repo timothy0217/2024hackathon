@@ -6,7 +6,7 @@ import TopQnAListView from '../views/TopQnAListView.vue';
 import QnAListView from '../views/QnAListView.vue';
 import CouponView from '../views/CouponView.vue';
 import CouponListView from '../views/CouponListView.vue';
-// import HotSpotView from '../views/vaccine-timeline.vue';
+import HotSpotView from '../views/vaccine-timeline.vue';
 import TicketDetail from '../views/TicketDetail.vue';
 import CouponDetail from '../views/CouponDetail.vue';
 import HomeView from '@/views/HomeView.vue';
@@ -29,6 +29,11 @@ const router = createRouter({
       path: '/addChild',
       name: 'addChild',
       component: addChild
+    },
+    {
+      path: '/HotSpotView',
+      name: 'HotSpotView',
+      component: HotSpotView
     },
   ]
 });

@@ -341,7 +341,7 @@ useHandleConnectionData(handleUserInfo);
   <RouterLink to="/subsidyform" style="color: #007B80">補助查詢</RouterLink>
 </button>
       <button id="tab-2">
-  <RouterLink to="/vaccine-timeline" style="color: #007B80">疫苗軌跡</RouterLink>
+  <RouterLink to="/HotSpotView" style="color: #007B80">疫苗軌跡</RouterLink>
 </button>
   </div>
 </template>
